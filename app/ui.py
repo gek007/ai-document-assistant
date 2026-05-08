@@ -6,8 +6,8 @@ import gradio as gr
 from src.agent.loop import run_agent_stream
 from src.document_store import DocumentStore, get_store
 
-
 # ── Helpers ────────────────────────────────────────────────────────────────────
+
 
 async def _doc_list_md(store: DocumentStore) -> str:
     files = await store.list_files()
@@ -15,7 +15,11 @@ async def _doc_list_md(store: DocumentStore) -> str:
         return "_No documents found. Upload one to get started._"
     lines = ["| File | Size | Type |", "|---|---|---|"]
     for f in files:
-        size = f"{f.size_bytes // 1024} KB" if f.size_bytes >= 1024 else f"{f.size_bytes} B"
+        size = (
+            f"{f.size_bytes // 1024} KB"
+            if f.size_bytes >= 1024
+            else f"{f.size_bytes} B"
+        )
         lines.append(f"| `{f.name}` | {size} | {f.extension or '?'} |")
     return "\n".join(lines)
 
@@ -27,6 +31,7 @@ async def _file_choices(store: DocumentStore) -> list[str]:
 
 # ── UI builder ─────────────────────────────────────────────────────────────────
 
+
 def build_ui() -> gr.Blocks:
     store = get_store()
 
@@ -35,11 +40,10 @@ def build_ui() -> gr.Blocks:
         gr.Markdown("# AI-Document-Assistant")
         gr.Markdown("Ask natural language questions about your documents.")
 
-        oai_history = gr.State([])   # OpenAI-format conversation history
-        trace_state = gr.State([])   # list of TraceStep dicts
+        oai_history = gr.State([])  # OpenAI-format conversation history
+        trace_state = gr.State([])  # list of TraceStep dicts
 
         with gr.Row(equal_height=False):
-
             # ── Left panel: document management ────────────────────────────────
             with gr.Column(scale=1, min_width=260):
                 gr.Markdown("### Documents")
@@ -54,7 +58,9 @@ def build_ui() -> gr.Blocks:
                 )
 
                 gr.Markdown("### Delete")
-                delete_dd = gr.Dropdown(label="Select file", choices=[], interactive=True)
+                delete_dd = gr.Dropdown(
+                    label="Select file", choices=[], interactive=True
+                )
                 delete_btn = gr.Button("🗑️ Delete selected", size="sm", variant="stop")
 
             # ── Right panel: chat ───────────────────────────────────────────────
@@ -81,16 +87,12 @@ def build_ui() -> gr.Blocks:
 
                 clear_btn = gr.Button("🗑️ Clear conversation", size="sm")
 
-                gr.HTML("<div style='margin-top: 24px;'></div>")
-
-                gr.Examples(
-                    examples=[
-                        ["Are there any data quality issues in the sales CSV?"],
-                        ["Did anyone mention Q1 sales in the emails? How do they compare to the actual CSV data?"],
-                    ],
-                    inputs=msg_input,
-                    label="Example questions (click to copy)",
-                )
+                gr.HTML("<div style='margin-top: 20px;'></div>")
+                gr.Markdown("**Example questions** (click to copy)")
+                with gr.Column():
+                    btn_q1 = gr.Button("What was decided in the March 12 meeting?", size="sm")
+                    btn_q2 = gr.Button("Are there any data quality issues in the sales CSV?", size="sm")
+                    btn_q3 = gr.Button("Did anyone mention Q1 sales in the emails? How do they compare to the actual CSV data?", size="sm")
 
         # ── Event handlers ──────────────────────────────────────────────────────
 
@@ -161,6 +163,10 @@ def build_ui() -> gr.Blocks:
         def clear_conversation():
             return [], [], [], ""
 
+        btn_q1.click(fn=lambda: "What was decided in the March 12 meeting?", outputs=msg_input)
+        btn_q2.click(fn=lambda: "Are there any data quality issues in the sales CSV?", outputs=msg_input)
+        btn_q3.click(fn=lambda: "Did anyone mention Q1 sales in the emails? How do they compare to the actual CSV data?", outputs=msg_input)
+
         # ── Wire events ─────────────────────────────────────────────────────────
 
         doc_refresh_outputs = [doc_list, delete_dd]
@@ -171,9 +177,19 @@ def build_ui() -> gr.Blocks:
         delete_btn.click(handle_delete, inputs=[delete_dd], outputs=doc_refresh_outputs)
 
         chat_outputs = [chatbot, oai_history, trace_state, msg_input, trace_display]
-        send_btn.click(chat_submit, inputs=[msg_input, chatbot, oai_history, trace_state], outputs=chat_outputs)
-        msg_input.submit(chat_submit, inputs=[msg_input, chatbot, oai_history, trace_state], outputs=chat_outputs)
+        send_btn.click(
+            chat_submit,
+            inputs=[msg_input, chatbot, oai_history, trace_state],
+            outputs=chat_outputs,
+        )
+        msg_input.submit(
+            chat_submit,
+            inputs=[msg_input, chatbot, oai_history, trace_state],
+            outputs=chat_outputs,
+        )
 
-        clear_btn.click(clear_conversation, outputs=[chatbot, oai_history, trace_state, msg_input])
+        clear_btn.click(
+            clear_conversation, outputs=[chatbot, oai_history, trace_state, msg_input]
+        )
 
     return demo
