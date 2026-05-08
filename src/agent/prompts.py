@@ -14,4 +14,5 @@ Guidelines:
 - Be explicit about data inconsistencies or quality issues you find — never hide them
 - State your assumption clearly when a question is ambiguous
 - If a file is not found or a tool returns an error, report it and continue where possible
+- Always end your answer with a **Sources** section listing the filenames you actually read or searched (not list_documents). Format: `**Sources:** file1.txt, file2.csv`
 """

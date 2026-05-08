@@ -21,7 +21,8 @@ LLM Traces
 - **Hand-rolled agent loop** — no LangChain, CrewAI, or similar frameworks. The agent decides which tools to call, executes them, and iterates until it has a complete answer.
 - **5 tools**: list documents, read document, search within a document, parse CSV (with data quality detection), query JSON by dot-path.
 - **Streaming UI** — tokens appear in real time; tool-call status is shown inline while the agent works.
-- **Reasoning trace** — every tool call (name, input, output snippet) is shown in a collapsible panel after each answer.
+- **Reasoning trace** — every tool call (name, input, full output) is shown in a scrollable collapsible panel after each answer.
+- **Source attribution** — the agent ends every answer with a `**Sources:**` line listing the files it actually read or searched.
 - **Document management** — upload and delete documents via the UI; the agent sees changes immediately (no re-indexing).
 - **Async throughout** — `AsyncOpenAI` client, `aiofiles` for file I/O, async Gradio handlers.
 - **Retry** — automatic retries on OpenAI rate limits, timeouts, and connection errors (tenacity, exponential backoff).
