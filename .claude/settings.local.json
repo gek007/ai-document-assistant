@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "PowerShell(New-Item *)",
-      "Bash(uv run *)"
+      "Bash(uv run *)",
+      "Bash(taskkill /F /IM python.exe)"
     ]
   }
 }
