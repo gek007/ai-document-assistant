@@ -45,6 +45,7 @@ async def run_agent_stream(
     model: str | None = None,
     max_iterations: int | None = None,
 ) -> AsyncGenerator[StreamEvent, None]:
+
     raw_project = os.environ.get("OPENAI_PROJECT_ID", "")
     project_id = raw_project if raw_project.startswith("proj_") else None
 
@@ -52,6 +53,7 @@ async def run_agent_stream(
         api_key=os.environ["OPENAI_API_KEY"],
         project=project_id,
     )
+    
     model = model or os.environ.get("OPENAI_MODEL", "gpt-4o")
     max_iterations = max_iterations or int(os.environ.get("MAX_AGENT_ITERATIONS", "10"))
     store_traces = _STORE_TRACES
