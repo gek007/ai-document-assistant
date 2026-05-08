@@ -1,0 +1,59 @@
+2026-03-08 02:14:33 [INFO] Server started on port 8080 (4 workers)
+2026-03-08 02:14:33 [INFO] Connected to database db-primary.globe-internal.com:5432
+2026-03-08 02:14:34 [INFO] Connected to read replica db-replica.globe-internal.com:5432
+2026-03-08 02:14:34 [INFO] Redis cache connected at cache.globe-internal.com:6379
+2026-03-08 02:14:35 [INFO] Adyen webhook listener registered at /webhooks/adyen
+2026-03-08 02:14:35 [INFO] Health check endpoint active at /health
+2026-03-08 06:22:11 [INFO] Incoming webhook: AUTHORISATION from Adyen (merchant_ref: ORD-20260308-1142)
+2026-03-08 06:22:11 [INFO] Payment confirmed for order ORD-20260308-1142, amount: 99.00 USD
+2026-03-08 07:45:02 [WARN] Slow query detected: SELECT * FROM transactions WHERE created_at > ? (1243ms, threshold: 1000ms)
+2026-03-08 07:45:02 [INFO] Query plan: sequential scan on transactions (missing index on created_at?)
+2026-03-08 09:15:44 [INFO] Incoming webhook: AUTHORISATION from Adyen (merchant_ref: ORD-20260308-2291)
+2026-03-08 09:15:44 [INFO] Payment confirmed for order ORD-20260308-2291, amount: 89.00 EUR
+2026-03-08 11:30:18 [WARN] Connection pool utilization at 82% (41/50 connections in use)
+2026-03-08 11:30:18 [WARN] Consider increasing pool size or investigating long-running queries
+2026-03-08 11:31:05 [WARN] Connection pool utilization at 88% (44/50 connections in use)
+2026-03-08 11:31:22 [ERROR] Connection pool exhausted — unable to acquire connection within 30000ms
+2026-03-08 11:31:22 [ERROR] Request failed: POST /api/orders (500 Internal Server Error)
+2026-03-08 11:31:22 [ERROR] Stack trace: ConnectionPoolError: Timeout acquiring connection from pool
+    at Pool.acquire (node_modules/pg-pool/index.js:194:27)
+    at async OrderService.create (src/services/order.ts:47:18)
+    at async OrderController.createOrder (src/controllers/order.ts:23:14)
+2026-03-08 11:31:45 [WARN] Connection pool utilization back to 64% (32/50 connections)
+2026-03-08 11:31:45 [INFO] Pool recovery detected — connections released
+2026-03-08 12:00:00 [INFO] Scheduled job: daily_report started
+2026-03-08 12:00:03 [INFO] Daily report generated: 47 orders, $12,430.00 revenue, 0 refunds
+2026-03-08 14:22:17 [INFO] Incoming webhook: REFUND from Adyen (merchant_ref: ORD-20260214-0887)
+2026-03-08 14:22:17 [INFO] Refund processed for order ORD-20260214-0887, amount: 490.00 USD
+2026-03-08 16:05:33 [WARN] Slow query detected: SELECT orders.*, customers.* FROM orders JOIN customers ON ... (1587ms, threshold: 1000ms)
+2026-03-08 18:30:00 [INFO] Scheduled job: cache_cleanup started
+2026-03-08 18:30:01 [INFO] Cache cleanup: evicted 1,247 expired keys, freed 48MB
+2026-03-08 22:14:55 [INFO] Incoming webhook: AUTHORISATION from Adyen (merchant_ref: ORD-20260308-4410)
+2026-03-08 22:14:56 [INFO] Payment confirmed for order ORD-20260308-4410, amount: 499.00 USD
+2026-03-09 02:00:00 [INFO] Scheduled job: database_backup started
+2026-03-09 02:03:44 [INFO] Database backup completed: globe_prod_20260309.sql.gz (2.3GB)
+2026-03-09 06:10:22 [INFO] Server health check: OK (uptime: 27h 55m, memory: 412MB/1024MB)
+2026-03-09 08:44:11 [ERROR] Unhandled webhook event type: CHARGEBACK (not implemented)
+2026-03-09 08:44:11 [WARN] Webhook payload stored in dead-letter queue for manual review
+2026-03-09 08:44:11 [INFO] Dead letter queue size: 1 (threshold alert at 10)
+2026-03-09 09:00:15 [INFO] Incoming webhook: AUTHORISATION from Adyen (merchant_ref: ORD-20260309-0112)
+2026-03-09 09:00:15 [INFO] Payment confirmed for order ORD-20260309-0112, amount: 49.00 USD
+2026-03-09 10:33:41 [WARN] Rate limit approaching for client API key ak_enterprise_0042: 890/1000 requests in current window
+2026-03-09 10:34:02 [WARN] Rate limit approaching for client API key ak_enterprise_0042: 940/1000 requests in current window
+2026-03-09 10:34:18 [ERROR] Rate limit exceeded for client API key ak_enterprise_0042: 1003/1000 requests — throttled
+2026-03-09 10:34:18 [WARN] No rate limiting enforcement configured — request was allowed through
+2026-03-09 10:34:18 [WARN] API_RATE_LIMITING feature flag is disabled in production config
+2026-03-09 11:15:00 [INFO] Deployment started: version 2.14.3 -> 2.14.4 (rolling update)
+2026-03-09 11:15:30 [INFO] Worker 1/4 updated to 2.14.4
+2026-03-09 11:16:00 [INFO] Worker 2/4 updated to 2.14.4
+2026-03-09 11:16:30 [INFO] Worker 3/4 updated to 2.14.4
+2026-03-09 11:17:00 [INFO] Worker 4/4 updated to 2.14.4
+2026-03-09 11:17:01 [INFO] Deployment completed: all workers running 2.14.4
+2026-03-09 11:17:01 [WARN] Config mismatch: app.version still reads "2.14.3" — config file not updated with deployment
+2026-03-09 14:20:08 [ERROR] Unhandled webhook event type: CHARGEBACK_REVERSED (not implemented)
+2026-03-09 14:20:08 [WARN] Webhook payload stored in dead-letter queue for manual review
+2026-03-09 14:20:08 [INFO] Dead letter queue size: 2 (threshold alert at 10)
+2026-03-09 18:00:00 [INFO] Scheduled job: cache_cleanup started
+2026-03-09 18:00:02 [INFO] Cache cleanup: evicted 983 expired keys, freed 37MB
+2026-03-09 23:55:41 [WARN] Slow query detected: SELECT COUNT(*) FROM transactions WHERE status = 'pending' GROUP BY region (2104ms, threshold: 1000ms)
+2026-03-09 23:55:41 [ERROR] Query exceeded critical threshold (2000ms) — logged for review

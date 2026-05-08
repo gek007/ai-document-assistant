@@ -1,0 +1,88 @@
+From: Sarah Chen <sarah.chen@globe-corp.com>
+To: David Park <david.park@globe-corp.com>, Noa Levy <noa.levy@globe-corp.com>
+Date: March 10, 2026 09:14 AM
+Subject: RE: Q1 numbers looking off
+
+David, Noa —
+
+I pulled the Q1 dashboard this morning and the numbers don't match what sales reported last week. Dashboard shows ~$142K total revenue for Jan-Feb, but Mike from sales quoted $158K in the all-hands. Can one of you look into this?
+
+My gut says it's the EUR conversion — we might be showing raw EUR amounts without converting. Or there could be pending transactions that sales is counting but we're not.
+
+Need this resolved before the board review on March 18.
+
+— Sarah
+
+---
+
+From: David Park <david.park@globe-corp.com>
+To: Sarah Chen <sarah.chen@globe-corp.com>, Noa Levy <noa.levy@globe-corp.com>
+Date: March 10, 2026 10:32 AM
+Subject: RE: Q1 numbers looking off
+
+Sarah,
+
+Good catch. I looked at the revenue query and you're right — it's treating EUR as USD (no conversion applied). The raw sum is $142,340 but if we convert EUR at ~1.08 the total comes closer to $148K.
+
+The remaining ~$10K gap is probably pending transactions. We have 3 enterprise deals marked as "pending" that sales is counting as closed because the contracts are signed. Mike's team counts them at signature, we count at payment confirmation.
+
+Quick fix: I can add the exchange rate conversion today. The pending issue is a process question — do we want to change our logic to match sales, or keep it as-is and just note the difference?
+
+— David
+
+---
+
+From: Noa Levy <noa.levy@globe-corp.com>
+To: Sarah Chen <sarah.chen@globe-corp.com>, David Park <david.park@globe-corp.com>
+Date: March 10, 2026 11:05 AM
+Subject: RE: Q1 numbers looking off
+
+Adding some context — I checked the Adyen dashboard and the 3 pending transactions are:
+
+1. Globe Enterprise x1 — North America — $499 (Jan 18, awaiting PO approval)
+2. Globe Enterprise x? — North America — $499+ (Feb 22, units field is blank in our CSV, Sarah Lopez's deal)
+3. Globe Enterprise x1 — Europe — EUR 499 (Mar 10, just submitted)
+
+For #2, the CSV has a blank units_sold field. I pinged Sarah Lopez and she said it's 2 units ($998 total). Looks like a data entry issue.
+
+I agree with David on the EUR fix. For the pending question, I'd suggest we keep our system counting at payment confirmation — it's more accurate. We just need a "projected revenue" line that includes pending.
+
+— Noa
+
+---
+
+From: Sarah Chen <sarah.chen@globe-corp.com>
+To: David Park <david.park@globe-corp.com>, Noa Levy <noa.levy@globe-corp.com>
+Date: March 10, 2026 11:48 AM
+Subject: RE: Q1 numbers looking off
+
+Thanks both. Plan:
+
+1. David: Apply EUR conversion fix today
+2. Noa: Fix the blank units field in the CSV and add a validation rule so this can't happen again
+3. I'll add a "projected (incl. pending)" line to the board deck
+
+Also — David, while you're in the revenue query, can you check if the refunded transaction from Feb 14 (Asia Pacific, Globe Basic) is being subtracted from the total? If we're counting it, that's another discrepancy.
+
+Let's sync at 3pm if there are any surprises.
+
+— Sarah
+
+---
+
+From: David Park <david.park@globe-corp.com>
+To: Sarah Chen <sarah.chen@globe-corp.com>, Noa Levy <noa.levy@globe-corp.com>
+Date: March 10, 2026 03:22 PM
+Subject: RE: Q1 numbers looking off
+
+Update from 3pm sync:
+
+- EUR conversion is live. Dashboard now shows $148,203 for Jan-Feb confirmed revenue.
+- The Feb 14 refund ($490, 10 units x $49) WAS being counted as revenue. Fixed — it's now excluded. Adjusted total: $147,713.
+- Noa fixed the CSV. Sarah Lopez's deal was 2x Enterprise = $998.
+
+Projected revenue including all pending deals: ~$151,700 (confirmed $147,713 + pending $3,996).
+
+Should be clean for the board deck now. Let me know if anything else looks off.
+
+— David

@@ -1,0 +1,100 @@
+{
+  "app": {
+    "name": "Globe Platform",
+    "version": "2.14.3",
+    "environment": "production",
+    "debug": false,
+    "features": {
+      "DASHBOARD_V2": false,
+      "ADYEN_WEBHOOKS": true,
+      "API_RATE_LIMITING": false,
+      "EXPORT_CSV": true
+    }
+  },
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8080,
+    "workers": 4,
+    "timeout_seconds": 30,
+    "cors": {
+      "allowed_origins": ["https://app.globe-corp.com", "https://staging.globe-corp.com"],
+      "allowed_methods": ["GET", "POST", "PUT", "DELETE"],
+      "allow_credentials": true
+    }
+  },
+  "database": {
+    "primary": {
+      "host": "db-primary.globe-internal.com",
+      "port": 5432,
+      "name": "globe_prod",
+      "pool": {
+        "min": 5,
+        "max": 50,
+        "idle_timeout_ms": 30000
+      },
+      "ssl": true
+    },
+    "read_replica": {
+      "host": "db-replica.globe-internal.com",
+      "port": 5432,
+      "name": "globe_prod",
+      "pool": {
+        "min": 2,
+        "max": 20,
+        "idle_timeout_ms": 30000
+      },
+      "ssl": true
+    }
+  },
+  "cache": {
+    "provider": "redis",
+    "host": "cache.globe-internal.com",
+    "port": 6379,
+    "ttl_seconds": 300,
+    "max_memory_mb": 512
+  },
+  "payments": {
+    "provider": "adyen",
+    "environment": "live",
+    "merchant_account": "GlobeCorp_LIVE",
+    "webhook_url": "https://api.globe-corp.com/webhooks/adyen",
+    "supported_methods": ["card", "ideal", "bancontact", "sepa_direct_debit"],
+    "currencies": ["USD", "EUR", "GBP"],
+    "retry": {
+      "max_attempts": 3,
+      "backoff_ms": 1000
+    }
+  },
+  "monitoring": {
+    "apm": {
+      "enabled": true,
+      "service_name": "globe-api",
+      "sample_rate": 0.1
+    },
+    "logging": {
+      "level": "info",
+      "format": "json",
+      "outputs": ["stdout", "file"],
+      "file_path": "/var/log/globe/app.log",
+      "rotation": {
+        "max_size_mb": 100,
+        "max_files": 10
+      }
+    },
+    "alerts": {
+      "error_rate_threshold": 0.05,
+      "latency_p99_threshold_ms": 2000,
+      "notification_channels": ["slack:#globe-alerts", "pagerduty:globe-oncall"]
+    }
+  },
+  "integrations": {
+    "jira": {
+      "base_url": "https://globe-corp.atlassian.net",
+      "project_key": "GLB"
+    },
+    "slack": {
+      "webhook_url": "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+      "default_channel": "#globe-engineering"
+    }
+  }
+}

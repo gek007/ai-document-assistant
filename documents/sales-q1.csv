@@ -1,0 +1,36 @@
+date,region,product,units_sold,unit_price,currency,sales_rep,status
+2026-01-05,North America,Globe Pro,12,99.00,USD,Mike Johnson,completed
+2026-01-05,Europe,Globe Pro,8,89.00,EUR,Anna Schmidt,completed
+2026-01-08,North America,Globe Basic,25,49.00,USD,Mike Johnson,completed
+2026-01-08,Asia Pacific,Globe Pro,5,110.00,USD,Yuki Tanaka,completed
+2026-01-12,Europe,Globe Enterprise,2,499.00,EUR,Anna Schmidt,completed
+2026-01-12,North America,Globe Basic,30,49.00,USD,Sarah Lopez,completed
+2026-01-15,Asia Pacific,Globe Basic,15,$49.00,USD,Yuki Tanaka,completed
+2026-01-18,North America,Globe Enterprise,1,499.00,USD,Mike Johnson,pending
+2026-01-20,Europe,Globe Pro,11,89.00,EUR,Pierre Dubois,completed
+2026-01-22,North America,Globe Pro,7,99.00,USD,Sarah Lopez,completed
+2026-01-25,Asia Pacific,Globe Enterprise,3,499,USD,Yuki Tanaka,completed
+2026-01-28,Europe,Globe Basic,20,45.00,EUR,Anna Schmidt,completed
+2026-01-30,North America,Globe Pro,9,99.00,USD,Mike Johnson,completed
+2026-02-02,North America,Globe Basic,18,49.00,USD,Sarah Lopez,completed
+2026-02-02,Europe,Globe Pro,14,89.00,EUR,Pierre Dubois,completed
+2026-02-05,Asia Pacific,Globe Pro,6,110.00,USD,Yuki Tanaka,completed
+2026-02-08,North America,Globe Enterprise,2,499.00,USD,Mike Johnson,completed
+2026-02-10,Europe,Globe Enterprise,1,499.00,EUR,,completed
+2026-02-12,North America,Globe Basic,22,49.00,USD,Sarah Lopez,completed
+2026-02-14,Asia Pacific,Globe Basic,10,49.00,USD,Yuki Tanaka,refunded
+2026-02-18,Europe,Globe Pro,9,89.00,EUR,Anna Schmidt,completed
+2026-02-20,North America,Globe Pro,15,99.00,USD,Mike Johnson,completed
+2026-02-22,North America,Globe Enterprise,,499.00,USD,Sarah Lopez,pending
+2026-02-25,Asia Pacific,Globe Pro,4,110.00,USD,Yuki Tanaka,completed
+2026-02-28,Europe,Globe Basic,17,45.00,EUR,Pierre Dubois,completed
+2026-03-01,North America,Globe Pro,11,99.00,USD,Mike Johnson,completed
+2026-03-03,Europe,Globe Pro,7,89,EUR,Anna Schmidt,completed
+2026-03-05,North America,Globe Basic,28,49.00,USD,Sarah Lopez,completed
+2026-03-07,Asia Pacific,Globe Enterprise,2,499.00,USD,Yuki Tanaka,completed
+2026-03-10,Europe,Globe Enterprise,1,499.00,EUR,Pierre Dubois,pending
+2026-03-10,North America,Globe Pro,13,99.00,USD,Mike Johnson,completed
+2026-03-12,North America,Globe Basic,19,49.00,USD,Sarah Lopez,completed
+2026-03-14,Asia Pacific,Globe Basic,12,49.00,USD,Yuki Tanaka,completed
+2026-03-15,europe,Globe Pro,10,89.00,EUR,Anna Schmidt,completed
+2026-03-15,North America,Globe Enterprise,3,499.00,USD,Mike Johnson,completed

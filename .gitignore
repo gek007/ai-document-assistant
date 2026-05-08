@@ -1,0 +1,14 @@
+node_modules/
+__pycache__/
+.env
+.env.local
+*.pyc
+dist/
+build/
+.DS_Store
+Thumbs.db
+
+
+IMPLEMENTATION_ORDER.md
+BRAINSTORM.md
+PLAN.md

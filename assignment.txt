@@ -1,0 +1,138 @@
+Home Assignment: Document Agent
+================================
+
+
+About This Assignment
+---------------------
+
+Our team builds AI-powered analysis and automation tools. A core skill for
+this role is the ability to rapidly build working software using modern AI
+tools — not just writing code, but designing systems that use LLMs as a
+core component.
+
+This assignment is open-ended by design. There is no single correct
+solution. We're interested in how far you get, the decisions you make, and
+how you leverage AI throughout the process.
+
+Expected time: 2–3 hours. We respect your time — don't over-invest. A
+working solution with rough edges is better than a polished half-finished
+one.
+
+
+The Assignment
+--------------
+
+Build a Document Agent — a small application where a user can ask natural
+language questions about a collection of documents, and an AI agent answers
+by reading and analyzing them.
+
+The starter repository includes a documents/ folder with the following
+files:
+
+  File              Description
+  ────────────────  ─────────────────────────────────────────────────────
+  meetings.md       Meeting notes from a fictional project team, multiple
+                    dates
+  sales-q1.csv      Quarterly sales data with some inconsistencies (mixed
+                    formats, missing values)
+  emails.txt        A plain-text email thread between team members
+  config.json       Application configuration with nested settings
+  server-log.txt    A freeform server log with timestamps, errors, and
+                    warnings
+
+
+Example Interactions
+--------------------
+
+These are examples of what a user might ask. Your agent doesn't need to
+handle these exact questions — they illustrate the expected level of
+capability.
+
+  Simple (single document):
+  "What was decided in the March 12 meeting?"
+
+  Cross-document:
+  "Did anyone mention the Q1 sales numbers in the email thread? How do
+  they compare to the actual CSV data?"
+
+  Analytical:
+  "Are there any errors in the server log that might be related to the
+  config settings?"
+
+
+Requirements
+------------
+
+YOU MUST:
+
+  - Implement the agent loop yourself — the part where the agent decides
+    what to do, calls tools, observes results, and decides the next step.
+    This is the core of the assignment.
+
+  - Define at least one tool the agent can use (e.g., read a file, list
+    files).
+
+  - Provide a user interface for interacting with the agent. This can be a
+    web UI, a terminal UI, or even a simple CLI — whatever lets a user ask
+    questions and see answers.
+
+  - Include tests.
+
+  - Use an LLM API as the agent's reasoning engine (Claude, OpenAI, or any
+    other provider). Bring your own API key.
+
+  - Include a README with:
+      * How to install and run the project
+      * Which LLM API you used
+      * Which AI coding tools you used to build this (be honest — we
+        encourage heavy use)
+      * Any design decisions worth calling out
+
+YOU MAY:
+
+  - Use any programming language and framework for the application itself.
+
+  - Use any AI coding tools to help you build this — Claude Code, Cursor,
+    GitHub Copilot, ChatGPT, or anything else. We encourage it. How
+    effectively you use these tools is part of what we're evaluating.
+
+YOU MUST NOT:
+
+  - Use pre-built agent frameworks that provide the agent loop for you —
+    LangChain, CrewAI, AutoGen, Semantic Kernel, Haystack, or similar. The
+    orchestration logic must be yours. If in doubt whether a library
+    counts, write it yourself.
+
+
+Evaluation
+----------
+
+We evaluate on a spectrum, not a checklist. Here is what we look for at
+each level:
+
+BASELINE
+
+  A working agent that can read documents and answer questions about their
+  content. A UI exists and works. Tests exist and pass. The code is
+  readable.
+
+STRONG
+
+  The agent has multiple tools and decides which to use based on the
+  question. It can chain tool calls to answer questions that span multiple
+  documents. Structured extraction from messy formats (the CSV, the logs)
+  is handled well. Test coverage is meaningful — not just "it runs."
+
+EXCEPTIONAL
+
+  The agent shows its reasoning — which tools it called, what it found,
+  how it arrived at the answer. A correction or feedback mechanism exists
+  (user can fix a wrong extraction, and the agent accounts for it). Edge
+  cases are handled gracefully (malformed data, ambiguous questions, large
+  files). The architecture cleanly separates agent logic from application
+  logic.
+
+You do not need to reach "exceptional" to succeed. A solid baseline
+implementation with clean code and thoughtful decisions can be just as
+impressive as a feature-rich one with messy internals.
+
