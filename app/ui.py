@@ -31,8 +31,8 @@ def build_ui() -> gr.Blocks:
     store = get_store()
 
     # ── Layout ─────────────────────────────────────────────────────────────────
-    with gr.Blocks(title="Document Agent") as demo:
-        gr.Markdown("# Document Agent")
+    with gr.Blocks(title="AI-Document-Assistant") as demo:
+        gr.Markdown("# AI-Document-Assistant")
         gr.Markdown("Ask natural language questions about your documents.")
 
         oai_history = gr.State([])   # OpenAI-format conversation history
