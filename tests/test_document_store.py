@@ -1,5 +1,6 @@
-import pytest
 from pathlib import Path
+
+import pytest
 
 from src.document_store import DocumentStore
 
@@ -10,7 +11,13 @@ async def test_list_files_returns_all_sample_docs(tmp_docs_dir: Path):
     store = DocumentStore(str(tmp_docs_dir))
     files = await store.list_files()
     names = {f.name for f in files}
-    assert names == {"meetings.md", "sales-q1.csv", "emails.txt", "config.json", "server-log.txt"}
+    assert names == {
+        "meetings.md",
+        "sales-q1.csv",
+        "emails.txt",
+        "config.json",
+        "server-log.txt",
+    }
 
 
 async def test_list_files_has_correct_metadata(tmp_docs_dir: Path):

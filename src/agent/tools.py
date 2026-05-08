@@ -36,10 +36,11 @@ async def search_in_document(store: DocumentStore, filename: str, query: str) ->
     except (FileNotFoundError, PermissionError) as e:
         return f"Error: {e}"
 
+    query_words = [word.lower() for word in query.strip().split()]
     matches = [
         f"Line {i + 1}: {line}"
         for i, line in enumerate(content.splitlines())
-        if query.lower() in line.lower()
+        if all(word in line.lower() for word in query_words)
     ]
 
     if not matches:
