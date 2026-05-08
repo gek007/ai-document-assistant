@@ -66,7 +66,7 @@ def build_ui() -> gr.Blocks:
             # ── Right panel: chat ───────────────────────────────────────────────
             with gr.Column(scale=3):
                 chatbot = gr.Chatbot(
-                    height=280,
+                    height=286,
                     label="Chat",
                     show_label=False,
                     render_markdown=True,
