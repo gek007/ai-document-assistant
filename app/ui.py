@@ -9,6 +9,48 @@ from src.document_store import DocumentStore, get_store
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
 
+_TRACE_EMPTY_HTML = "<div style='color:#888;font-style:italic;padding:8px'>No tool calls yet.</div>"
+
+_TRACE_WRAP = (
+    "<div style='max-height:300px;overflow-y:auto;padding:8px;"
+    "font-family:monospace;font-size:13px;line-height:1.5'>{}</div>"
+)
+
+
+def _render_trace_html(trace: list[dict]) -> str:
+    import html as _html
+
+    if not trace:
+        return _TRACE_EMPTY_HTML
+
+    parts = []
+    for step in trace:
+        tool = step.get("tool", "?")
+        inp = step.get("input", {})
+        out = step.get("output", "")
+
+        if inp:
+            args = ", ".join(f'{k}="{_html.escape(str(v))}"' for k, v in inp.items())
+            header = f"<b>{_html.escape(tool)}</b> ({args})"
+        else:
+            header = f"<b>{_html.escape(tool)}</b>"
+
+        MAX = 600
+        preview = out if len(out) <= MAX else out[:MAX] + "…"
+
+        block = (
+            f"<div style='margin-bottom:12px'>"
+            f"<div style='margin-bottom:4px'>{header}</div>"
+            f"<pre style='background:#1e1e1e;border:1px solid #444;border-radius:4px;"
+            f"padding:8px;margin:0;overflow-x:auto;white-space:pre-wrap;word-break:break-word'>"
+            f"{_html.escape(preview)}</pre></div>"
+        )
+        parts.append(block)
+
+    inner = "<hr style='border-color:#444;margin:8px 0'>".join(parts)
+    return _TRACE_WRAP.format(inner)
+
+
 async def _doc_list_md(store: DocumentStore) -> str:
     files = await store.list_files()
     if not files:
@@ -73,7 +115,7 @@ def build_ui() -> gr.Blocks:
                 )
 
                 with gr.Accordion("🔍 Reasoning trace", open=False):
-                    trace_display = gr.JSON(label="Tool calls made by the agent")
+                    trace_display = gr.HTML(value=_TRACE_EMPTY_HTML)
 
                 with gr.Row():
                     msg_input = gr.Textbox(
@@ -114,11 +156,11 @@ def build_ui() -> gr.Blocks:
 
         async def chat_submit(user_msg, chatbot_hist, oai_hist, trace):
             if not user_msg.strip():
-                yield chatbot_hist, oai_hist, trace, user_msg, trace
+                yield chatbot_hist, oai_hist, trace, user_msg, _render_trace_html(trace)
                 return
 
             chatbot_hist = chatbot_hist + [{"role": "user", "content": user_msg}]
-            yield chatbot_hist, oai_hist, trace, "", trace  # clear input immediately
+            yield chatbot_hist, oai_hist, trace, "", _render_trace_html(trace)  # clear input immediately
 
             assistant_content = ""
             status_line = ""
@@ -157,11 +199,11 @@ def build_ui() -> gr.Blocks:
                     oai_hist,
                     trace,
                     "",
-                    trace,
+                    _render_trace_html(trace),
                 )
 
         def clear_conversation():
-            return [], [], [], ""
+            return [], [], [], "", _TRACE_EMPTY_HTML
 
         btn_q1.click(fn=lambda: "What was decided in the March 12 meeting?", outputs=msg_input)
         btn_q2.click(fn=lambda: "Are there any data quality issues in the sales CSV?", outputs=msg_input)
@@ -189,7 +231,7 @@ def build_ui() -> gr.Blocks:
         )
 
         clear_btn.click(
-            clear_conversation, outputs=[chatbot, oai_history, trace_state, msg_input]
+            clear_conversation, outputs=[chatbot, oai_history, trace_state, msg_input, trace_display]
         )
 
     return demo
