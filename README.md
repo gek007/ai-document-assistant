@@ -4,9 +4,15 @@ Ask natural language questions about a collection of documents. An AI agent read
 
 
 #UI 
+![1778242258907](image/README/1778242258907.png)
 
 
+Logs
+![1778242298060](image/README/1778242298060.png)
 
+
+LLM Traces
+![1778242321719](image/README/1778242321719.png)
 
 ---
 

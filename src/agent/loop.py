@@ -54,12 +54,12 @@ async def run_agent_stream(
     )
     model = model or os.environ.get("OPENAI_MODEL", "gpt-4o")
     max_iterations = max_iterations or int(os.environ.get("MAX_AGENT_ITERATIONS", "10"))
-    store = _STORE_TRACES
+    store_traces = _STORE_TRACES
     session_id = str(uuid.uuid4())
 
     log.info(
         "Agent started: model=%s, max_iterations=%d, history_turns=%d, session_id=%s, store_traces=%s, project=%s",
-        model, max_iterations, len(history) // 2, session_id, store,
+        model, max_iterations, len(history) // 2, session_id, store_traces,
         project_id or "none",
     )
 
@@ -85,7 +85,7 @@ async def run_agent_stream(
                 messages=messages,
                 tools=TOOL_SCHEMAS,
                 stream=True,
-                store=store,
+                store=store_traces,
                 metadata={
                     "app": "ai-document-assistant",
                     "session_id": session_id,
@@ -95,6 +95,10 @@ async def run_agent_stream(
         except _RETRYABLE as e:
             log.error("LLM API error after retries: %s", e)
             yield StreamEvent(type="error", content=f"LLM API error: {e}", trace=trace)
+            return
+        except Exception as e:
+            log.error("Unexpected LLM error: %s: %s", type(e).__name__, e)
+            yield StreamEvent(type="error", content=f"{type(e).__name__}: {e}", trace=trace)
             return
 
         async for chunk in stream:
