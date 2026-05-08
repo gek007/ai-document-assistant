@@ -6,8 +6,8 @@ from typing import Any
 from src.agent.helpers import is_numeric
 from src.document_store import DocumentStore
 
-
 # ── Tool implementations ───────────────────────────────────────────────────────
+
 
 async def list_documents(store: DocumentStore) -> str:
     files = await store.list_files()
@@ -16,7 +16,11 @@ async def list_documents(store: DocumentStore) -> str:
 
     lines = ["| File | Size | Type | Last Modified |", "|---|---|---|---|"]
     for f in files:
-        size = f"{f.size_bytes:,} bytes" if f.size_bytes < 1024 else f"{f.size_bytes // 1024} KB"
+        size = (
+            f"{f.size_bytes:,} bytes"
+            if f.size_bytes < 1024
+            else f"{f.size_bytes // 1024} KB"
+        )
         lines.append(
             f"| {f.name} | {size} | {f.extension or 'unknown'} | {f.modified.strftime('%Y-%m-%d %H:%M')} |"
         )
@@ -37,16 +41,26 @@ async def search_in_document(store: DocumentStore, filename: str, query: str) ->
         return f"Error: {e}"
 
     query_words = [word.lower() for word in query.strip().split()]
-    matches = [
-        f"Line {i + 1}: {line}"
-        for i, line in enumerate(content.splitlines())
-        if all(word in line.lower() for word in query_words)
-    ]
+    lines = content.splitlines()
+
+    # A match means: EVERY query word appears in the document somewhere (not necessarily on the same line)
+    if all(any(word in line.lower() for line in lines) for word in query_words):
+        # Report every line containing at least one of the query words (OR for lines, AND for words per line ignored)
+        matches = [
+            f"Line {i + 1}: {line}"
+            for i, line in enumerate(lines)
+            if any(word in line.lower() for word in query_words)
+        ]
+    else:
+        matches = []
 
     if not matches:
         return f"No matches found for {query!r} in {filename!r}."
 
-    return f"Found {len(matches)} match(es) for {query!r} in {filename!r}:\n\n" + "\n".join(matches)
+    return (
+        f"Found {len(matches)} match(es) for {query!r} in {filename!r}:\n\n"
+        + "\n".join(matches)
+    )
 
 
 async def parse_csv(store: DocumentStore, filename: str) -> str:
@@ -92,7 +106,9 @@ async def parse_csv(store: DocumentStore, filename: str) -> str:
             lower_map.setdefault(v.lower(), []).append(v)
         for variants in lower_map.values():
             if len(variants) > 1:
-                issues.append(f"Column '{col}': inconsistent casing — found {sorted(variants)}")
+                issues.append(
+                    f"Column '{col}': inconsistent casing — found {sorted(variants)}"
+                )
 
     # Per-column summary
     col_summaries = []
@@ -148,7 +164,11 @@ async def query_json(store: DocumentStore, filename: str, path: str) -> str:
                 f"at {'.'.join(traversed[:-1])!r}"
             )
 
-    value_repr = json.dumps(current, indent=2) if isinstance(current, (dict, list)) else str(current)
+    value_repr = (
+        json.dumps(current, indent=2)
+        if isinstance(current, (dict, list))
+        else str(current)
+    )
     return f"**{path}** = `{value_repr}` (type: {type(current).__name__})"
 
 

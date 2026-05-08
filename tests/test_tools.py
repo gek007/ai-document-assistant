@@ -21,9 +21,16 @@ def store(tmp_docs_dir: Path) -> DocumentStore:
 
 # ── list_documents ─────────────────────────────────────────────────────────────
 
+
 async def test_list_documents_returns_all_files(store: DocumentStore):
     result = await list_documents(store)
-    for name in ("meetings.md", "sales-q1.csv", "emails.txt", "config.json", "server-log.txt"):
+    for name in (
+        "meetings.md",
+        "sales-q1.csv",
+        "emails.txt",
+        "config.json",
+        "server-log.txt",
+    ):
         assert name in result
 
 
@@ -42,6 +49,7 @@ async def test_list_documents_empty_dir(tmp_path: Path):
 
 # ── read_document ──────────────────────────────────────────────────────────────
 
+
 async def test_read_document_returns_content(store: DocumentStore):
     result = await read_document(store, "config.json")
     assert '"Globe Platform"' in result
@@ -55,7 +63,7 @@ async def test_read_document_missing_file_returns_error(store: DocumentStore):
 # ── search_in_document ─────────────────────────────────────────────────────────
 
 async def test_search_returns_matching_lines_with_numbers(store: DocumentStore):
-    result = await search_in_document(store, "emails.txt", "Q1")
+    result = await search_in_document(store, "emails.txt", "Q1 Sarah sales")
     assert "Line" in result
     assert "Q1" in result
 
@@ -81,9 +89,15 @@ async def test_search_missing_file_returns_error(store: DocumentStore):
 
 # ── parse_csv ──────────────────────────────────────────────────────────────────
 
+
 async def test_parse_csv_detects_dollar_sign_format(store: DocumentStore):
     result = await parse_csv(store, "sales-q1.csv")
-    assert "$49.00" in result or "mixed numeric" in result.lower() or "dollar" in result.lower() or "'$" in result
+    assert (
+        "$49.00" in result
+        or "mixed numeric" in result.lower()
+        or "dollar" in result.lower()
+        or "'$" in result
+    )
 
 
 async def test_parse_csv_detects_missing_units_sold(store: DocumentStore):
@@ -114,6 +128,7 @@ async def test_parse_csv_missing_file_returns_error(store: DocumentStore):
 
 
 # ── query_json ─────────────────────────────────────────────────────────────────
+
 
 async def test_query_json_nested_bool(store: DocumentStore):
     result = await query_json(store, "config.json", "app.features.DASHBOARD_V2")
