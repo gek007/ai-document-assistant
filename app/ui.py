@@ -36,7 +36,7 @@ def build_ui() -> gr.Blocks:
     store = get_store()
 
     # ── Layout ─────────────────────────────────────────────────────────────────
-    with gr.Blocks(title="AI-Document-Assistant") as demo:
+    with gr.Blocks(title="AI-Document-Assistant", fill_height=True) as demo:
         gr.Markdown("# AI-Document-Assistant")
         gr.Markdown("Ask natural language questions about your documents.")
 
@@ -45,7 +45,7 @@ def build_ui() -> gr.Blocks:
 
         with gr.Row(equal_height=False):
             # ── Left panel: document management ────────────────────────────────
-            with gr.Column(scale=1, min_width=260):
+            with gr.Column(scale=1, min_width=260, elem_id="left-col"):
                 gr.Markdown("### Documents")
                 doc_list = gr.Markdown()
                 refresh_btn = gr.Button("🔄 Refresh", size="sm")
@@ -66,7 +66,7 @@ def build_ui() -> gr.Blocks:
             # ── Right panel: chat ───────────────────────────────────────────────
             with gr.Column(scale=3):
                 chatbot = gr.Chatbot(
-                    height=400,
+                    height=280,
                     label="Chat",
                     show_label=False,
                     render_markdown=True,
@@ -87,9 +87,9 @@ def build_ui() -> gr.Blocks:
 
                 clear_btn = gr.Button("🗑️ Clear conversation", size="sm")
 
-                gr.HTML("<div style='margin-top: 20px;'></div>")
+                gr.HTML("<div style='margin-top: 4px;'></div>")
                 gr.Markdown("**Example questions** (click to copy)")
-                with gr.Column():
+                with gr.Column(elem_classes="example-qs"):
                     btn_q1 = gr.Button("What was decided in the March 12 meeting?", size="sm")
                     btn_q2 = gr.Button("Are there any data quality issues in the sales CSV?", size="sm")
                     btn_q3 = gr.Button("Did anyone mention Q1 sales in the emails? How do they compare to the actual CSV data?", size="sm")
