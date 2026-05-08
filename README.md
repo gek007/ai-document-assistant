@@ -122,6 +122,16 @@ The completion ID is also logged locally at `DEBUG` level with a direct URL.
 
 ---
 
+## AI Coding Tools Used
+
+This project was built with **Claude Code** (Anthropic's CLI coding assistant). Claude Code was used for:
+- Architecture planning and design decisions
+- Writing all source files and tests
+- Debugging test failures and Gradio 6 API incompatibilities
+- Researching the OpenAI tracing API via Context7 MCP
+
+---
+
 ## Design Decisions
 
 **Why no RAG?**

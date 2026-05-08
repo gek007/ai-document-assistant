@@ -29,5 +29,11 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Claude Code
+.claude/
+
+# Project brainstorm notes (local only)
+BRAINSTORM.md
+
 # uv
 .python-version
