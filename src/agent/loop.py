@@ -45,9 +45,12 @@ async def run_agent_stream(
     model: str | None = None,
     max_iterations: int | None = None,
 ) -> AsyncGenerator[StreamEvent, None]:
+    raw_project = os.environ.get("OPENAI_PROJECT_ID", "")
+    project_id = raw_project if raw_project.startswith("proj_") else None
+
     client = AsyncOpenAI(
         api_key=os.environ["OPENAI_API_KEY"],
-        project=os.environ.get("OPENAI_PROJECT_ID") or None,
+        project=project_id,
     )
     model = model or os.environ.get("OPENAI_MODEL", "gpt-4o")
     max_iterations = max_iterations or int(os.environ.get("MAX_AGENT_ITERATIONS", "10"))
@@ -57,7 +60,7 @@ async def run_agent_stream(
     log.info(
         "Agent started: model=%s, max_iterations=%d, history_turns=%d, session_id=%s, store_traces=%s, project=%s",
         model, max_iterations, len(history) // 2, session_id, store,
-        os.environ.get("OPENAI_PROJECT_ID", "default"),
+        project_id or "none",
     )
 
     messages: list[dict] = (

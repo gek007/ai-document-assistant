@@ -81,6 +81,19 @@ def build_ui() -> gr.Blocks:
 
                 clear_btn = gr.Button("🗑️ Clear conversation", size="sm")
 
+                gr.Examples(
+                    examples=[
+                        ["What files do you have access to?"],
+                        ["What was decided in the March 12 meeting?"],
+                        ["Are there any data quality issues in the sales CSV?"],
+                        ["Did anyone mention Q1 sales in the emails? How do they compare to the actual CSV data?"],
+                        ["Are there any errors in the server log that might relate to the config settings?"],
+                        ["What is the database host and port from config.json?"],
+                    ],
+                    inputs=[msg_input],
+                    label="Example questions (click to copy)",
+                )
+
         # ── Event handlers ──────────────────────────────────────────────────────
 
         async def refresh():
