@@ -6,6 +6,7 @@ from collections.abc import AsyncGenerator
 from openai import APIConnectionError, APITimeoutError, AsyncOpenAI, InternalServerError, RateLimitError
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_exponential
 
+from src.agent.prompts import SYSTEM_PROMPT
 from src.agent.schemas import TOOL_SCHEMAS
 from src.agent.tools import TOOL_REGISTRY
 from src.document_store import DocumentStore
@@ -13,24 +14,6 @@ from src.logger import get_logger
 from src.models import StreamEvent, TraceStep
 
 log = get_logger(__name__)
-
-SYSTEM_PROMPT = """You are a Document Agent — an AI assistant that helps users understand and analyze a collection of documents.
-
-You have access to the following tools:
-- list_documents: Always call this first to see what files are available
-- read_document: Read the full content of markdown, text, log, and JSON files
-- search_in_document: Find specific text within a document without reading the whole file
-- parse_csv: Analyze CSV files — always use this instead of read_document for CSV files
-- query_json: Extract specific values from JSON files by dot-path
-
-Guidelines:
-- Always start by calling list_documents to know what is available
-- For CSV files, call parse_csv — it surfaces data quality issues automatically
-- For cross-document questions, gather all relevant documents before synthesizing your answer
-- Be explicit about data inconsistencies or quality issues you find — never hide them
-- State your assumption clearly when a question is ambiguous
-- If a file is not found or a tool returns an error, report it and continue where possible
-"""
 
 _RETRYABLE = (RateLimitError, APITimeoutError, APIConnectionError, InternalServerError)
 
@@ -62,15 +45,19 @@ async def run_agent_stream(
     model: str | None = None,
     max_iterations: int | None = None,
 ) -> AsyncGenerator[StreamEvent, None]:
-    client = AsyncOpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    client = AsyncOpenAI(
+        api_key=os.environ["OPENAI_API_KEY"],
+        project=os.environ.get("OPENAI_PROJECT_ID") or None,
+    )
     model = model or os.environ.get("OPENAI_MODEL", "gpt-4o")
     max_iterations = max_iterations or int(os.environ.get("MAX_AGENT_ITERATIONS", "10"))
     store = _STORE_TRACES
     session_id = str(uuid.uuid4())
 
     log.info(
-        "Agent started: model=%s, max_iterations=%d, history_turns=%d, session_id=%s, store_traces=%s",
+        "Agent started: model=%s, max_iterations=%d, history_turns=%d, session_id=%s, store_traces=%s, project=%s",
         model, max_iterations, len(history) // 2, session_id, store,
+        os.environ.get("OPENAI_PROJECT_ID", "default"),
     )
 
     messages: list[dict] = (
@@ -86,6 +73,7 @@ async def run_agent_stream(
         accumulated_content = ""
         accumulated_tool_calls: dict[int, dict[str, str]] = {}
         finish_reason: str | None = None
+        completion_id: str | None = None
 
         try:
             stream = await _call_openai(
@@ -96,6 +84,7 @@ async def run_agent_stream(
                 stream=True,
                 store=store,
                 metadata={
+                    "app": "ai-document-assistant",
                     "session_id": session_id,
                     "iteration": str(iteration + 1),
                 },
@@ -106,6 +95,12 @@ async def run_agent_stream(
             return
 
         async for chunk in stream:
+            if completion_id is None and chunk.id:
+                completion_id = chunk.id
+                log.debug(
+                    "LLM completion_id=%s (view at platform.openai.com/traces/%s)",
+                    completion_id, completion_id,
+                )
             if not chunk.choices:
                 continue
             choice = chunk.choices[0]
@@ -137,8 +132,8 @@ async def run_agent_stream(
         if finish_reason == "stop" or (not accumulated_tool_calls and accumulated_content):
             messages.append({"role": "assistant", "content": accumulated_content})
             log.info(
-                "Agent done in %d iteration(s), trace_steps=%d, answer_len=%d",
-                iteration + 1, len(trace), len(accumulated_content),
+                "Agent done in %d iteration(s), trace_steps=%d, answer_len=%d, completion_id=%s",
+                iteration + 1, len(trace), len(accumulated_content), completion_id,
             )
             yield StreamEvent(type="done", content=accumulated_content, trace=trace)
             return

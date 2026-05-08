@@ -1,14 +1,33 @@
-node_modules/
+# Python
 __pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+
+# Environment
 .env
 .env.local
-*.pyc
+
+# Logs (generated at runtime)
+logs/
+
+# Test cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
 dist/
 build/
+
+# OS
 .DS_Store
 Thumbs.db
 
+# IDE
+.vscode/
+.idea/
 
-IMPLEMENTATION_ORDER.md
-BRAINSTORM.md
-PLAN.md
+# uv
+.python-version
